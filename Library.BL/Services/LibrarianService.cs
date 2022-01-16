@@ -4,13 +4,11 @@ using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UniLibrary.Models.DTO;
 
 namespace Library.BL.Services
 {
-  public class LibrarianService : ILibrarianService
+    public class LibrarianService : ILibrarianService
     {
         private readonly ILibrarianRepository _librarianRepository;
         private readonly ILogger _logger;
@@ -23,39 +21,47 @@ namespace Library.BL.Services
 
         public Librarian Create(Librarian librarian)
         {
-            _logger.Information("Librarian Create() Error");
+            try
+            {
+                var index = _librarianRepository.GetAll().OrderByDescending(x => x.Id).FirstOrDefault()?.Id;
 
-            var index = _librarianRepository.GetAll().OrderByDescending(x => x.Id).FirstOrDefault()?.Id;
+                librarian.Id = (int)(index != null ? index + 1 : 1);
+                return _librarianRepository.Create(librarian);
+            }
+            catch (Exception e)
+            {
+                _logger.Error(e.Message);
+            }
 
-            librarian.Id = (int)(index != null ? index + 1 : 1);
-
+            _logger.Information("Librarian Create() ");
+                       
             return _librarianRepository.Create(librarian);
         }
 
         public Librarian Delete(int id)
         {
-            _logger.Information("Librarian Delete() Error");
+            _logger.Information("Librarian Delete() ");
 
             return _librarianRepository.Delete(id);
         }
 
         public IEnumerable<Librarian> GetAll()
         {
-            _logger.Information("Librarian GetAll() Error");
+            _logger.Information("Librarian GetAll() ");
 
             return _librarianRepository.GetAll();
         }
 
         public Librarian GetById(int id)
         {
-            _logger.Information("Librarian GetById() Error");
+            _logger.Information("Librarian GetById() ");
 
             return _librarianRepository.GetById(id);
         }
 
         public Librarian Update(Librarian librarian)
         {
-            _logger.Information("Librarian Update() Error");
+            _logger.Information("Librarian Update() ");
 
             return _librarianRepository.Update(librarian);
         }
