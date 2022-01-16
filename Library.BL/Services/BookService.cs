@@ -1,12 +1,9 @@
 ﻿using Library.BL.Interfaces;
 using Library.DL.Interfaces;
-
 using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UniLibrary.Models.DTO;
 
 namespace Library.BL.Services
@@ -24,39 +21,44 @@ namespace Library.BL.Services
 
         public Book Create(Book book)
         {
-            _logger.Information("Book Create() Error");
-
+            try {
             var index = _bookRepository.GetAll().OrderByDescending(x => x.Id).FirstOrDefault()?.Id;
-
             book.Id = (int)(index != null ? index + 1 : 1);
+            return _bookRepository.Create(book);
+            }
+            catch (Exception e) {
+                _logger.Error(e.Message);
+            }
 
+            _logger.Information("Book Create()");
             return _bookRepository.Create(book);
         }
 
         public Book Delete(int id)
         {
-            _logger.Information("Book Delete() Error");
+            _logger.Information("Book Delete()");
 
             return _bookRepository.Delete(id);
         }
 
         public IEnumerable<Book> GetAll()
         {
-            _logger.Information("Book GetAll() Error");
+            _logger.Information("Book GetAll()");
 
             return _bookRepository.GetAll();
         }
 
         public Book GetById(int id)
         {
-            _logger.Information("Book GetById() Error");
+
+            _logger.Information("Book GetById()");
 
             return _bookRepository.GetById(id);
         }
 
         public Book Update(Book book)
         {
-            _logger.Information("Book Update() Error");
+            _logger.Information("Book Update()");
 
             return _bookRepository.Update(book);
         }
